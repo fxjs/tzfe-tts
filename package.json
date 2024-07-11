@@ -1,0 +1,16 @@
+{
+  "name": "tzfe-tts",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "deno run --allow-env --allow-net main.ts",
+    "compile": "deno compile --allow-env --allow-net --target x86_64-unknown-linux-gnu main.ts"
+  },
+  "keywords": [],
+  "author": "fx",
+  "license": "ISC",
+  "devDependencies": {
+    "@tanzerfe/eslint-config-lint": "^0.0.5",
+    "eslint": "8"
+  }
+}

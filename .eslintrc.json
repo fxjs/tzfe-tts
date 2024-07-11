@@ -1,0 +1,4 @@
+{
+  "root": true,
+  "extends": ["@tanzerfe/eslint-config-lint"]
+}

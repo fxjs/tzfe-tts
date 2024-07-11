@@ -1,0 +1,24 @@
+[Unit]
+Description=tzfe-tts
+Wants=network-online.target
+After=network-online.target
+AssertFileIsExecutable=/usr/local/bin/tzfe-tts
+
+[Service]
+User=root
+Group=root
+ProtectProc=invisible
+# 配置环境变量
+#Environment="TTS_PORT=8901" "TTS_AUTH_TOKEN=TOKEN"
+Environment="TTS_PORT=8901"
+ExecStart=/usr/local/bin/tzfe-tts
+Restart=always
+LimitNOFILE=1048576
+TasksMax=infinity
+TimeoutStopSec=infinity
+SendSIGKILL=no
+StandardOutput=append:/var/log/tzfe-tts/tzfe-tts.log
+StandardError=append:/var/log/tzfe-tts/tzfe-tts.log
+
+[Install]
+WantedBy=multi-user.target
