@@ -1,16 +1,8 @@
 #!/bin/bash
 
-echo 'Installing tzfe-tts ...'
-
-# todo wget
-mv tzfe-tts /usr/local/bin/tzfe-tts
-
-cp -f tzfe-tts.service  /etc/systemd/system/tzfe-tts.service
-
-mkdir /var/lib/tzfe-tts/
-mkdir /var/log/tzfe-tts/
-touch /var/log/tzfe-tts/tzfe-tts.log
+# 日志轮换
 touch /etc/logrotate.d/tzfe-tts
+
 
 #/var/log/tzfe-tts/tzfe-tts.log {
 #    size 200M
