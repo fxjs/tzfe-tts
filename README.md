@@ -2,34 +2,58 @@
 
 #### 文本转语音服务（支持跨域、鉴权）
 
+
 ### 环境装备
-[安装 deno](https://docs.deno.com/runtime/manual/)、pnpm
+[安装 deno](https://docs.deno.com/runtime/manual/)、[pnpm](https://pnpm.io/installation)
 
 ### 启动
-> pnpm start
+```shell
+pnpm start
+```
 
-
-### 编译包
-> pnpm compile
-> 
-> ./tzfe-tts # 运行
-> 
+### 编译
+```shell
+pnpm compile:linux
+#pnpm compile:macos
+#pnpm compile:windows
+pnpm compile:linux
+# 运行二进制包
+./tzfe-tts
+```
 [参考编译文档](https://docs.deno.com/runtime/manual/tools/compiler/)
 
 
-### 部署生产
-nohub - todo
-
 ### 环境变量
+```text
+TTS_PORT 启动端口默认 8901
 
-> TTS_PORT 启动端口默认 8901
-> 
-> TTS_AUTH_TOKEN 鉴权token
+TTS_AUTH_TOKEN 鉴权token （如设置为TestToken，调用接口时需在headers里添加Authorization字段）
+```
 
 
-### 使用
+### 部署（以 Arch、Debian 为例）
+##### 方式1. 注册 service 服务
+```shell
+sudo sh ./install.sh
+
+# 查看服务状态
+systemctl status tzfe-tts
+
+# 查看日志
+tail -F /var/log/tzfe-tts/tzfe-tts.log
+```
+
+##### 方式2. Docker镜像
+~_~
+
+### 卸载
+```shell
+sudo sh ./uninstall.sh
+```
+
+### 调用
 ```js
-fetch('http://localhost:8901/v1/audio/speech', {
+fetch('http://0.0.0.0:8901/v1/audio/speech', {
   method: 'POST',
   // headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + 'TestToken' },
   headers: { 'Content-Type': 'application/json' },

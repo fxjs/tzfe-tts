@@ -4,7 +4,10 @@
   "description": "",
   "scripts": {
     "start": "deno run --allow-env --allow-net main.ts",
-    "compile": "deno compile --allow-env --allow-net --target x86_64-unknown-linux-gnu main.ts"
+    "compile:linux": "deno compile --allow-env --allow-net --target x86_64-unknown-linux-gnu main.ts",
+    "compile:linux:arm": "deno compile --allow-env --allow-net --target aarch64-unknown-linux-gnu main.ts",
+    "compile:macos": "deno compile --allow-env --allow-net --target x86_64-apple-darwin main.ts",
+    "compile:windows": "deno compile --allow-env --allow-net --target x86_64-pc-windows-msvc main.ts"
   },
   "keywords": [],
   "author": "fx",
