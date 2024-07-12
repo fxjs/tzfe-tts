@@ -1,57 +1,54 @@
 # tzfe-tts
 
-#### 文本转语音服务（支持跨域、鉴权）
+#### Text-to-Speech Service (Supports CORS, Authentication)
 
+### Environment Setup
+Install [deno](https://docs.deno.com/runtime/manual/), [pnpm](https://pnpm.io/installation)
 
-### 环境装备
-安装 [deno](https://docs.deno.com/runtime/manual/)、[pnpm](https://pnpm.io/installation)
-
-### 启动
+### Start
 ```shell
 pnpm start
 ```
 
-### 编译
+### Compile
 ```shell
 pnpm compile:linux
 #pnpm compile:macos
 #pnpm compile:windows
 pnpm compile:linux
-# 运行二进制包
+# Run the binary package
 ./tzfe-tts
 ```
-[参考编译文档](https://docs.deno.com/runtime/manual/tools/compiler/)
+[Reference Compilation Documentation](https://docs.deno.com/runtime/manual/tools/compiler/)
 
-
-### 环境变量
+### Environment Variables
 ```text
-TTS_PORT 启动端口默认 8901
+TTS_PORT The default startup port is 8901
 
-TTS_AUTH_TOKEN 鉴权token （如设置为TestToken，调用接口时需在headers里添加Authorization字段）
+TTS_AUTH_TOKEN Authentication token (if set to TestToken, the Authorization field must be added in the headers when calling the interface)
 ```
 
-
-### 部署（以 Arch、Debian 为例）
-##### 方式1. 注册 service 服务
+### Deployment (Examples for Arch, Debian)
+##### Method 1. Register as a service
 ```shell
 sudo sh ./install.sh
 
-# 查看服务状态
+# Check service status
 systemctl status tzfe-tts
 
-# 查看日志
+# View logs
 tail -F /var/log/tzfe-tts/tzfe-tts.log
 ```
 
-##### 方式2. Docker镜像
+##### Method 2. Docker Image
 ~_~
 
-### 卸载
+### Uninstall
 ```shell
 sudo sh ./uninstall.sh
 ```
 
-### 调用
+### Usage
 ```js
 fetch('http://0.0.0.0:8901/v1/audio/speech', {
   method: 'POST',
@@ -59,7 +56,7 @@ fetch('http://0.0.0.0:8901/v1/audio/speech', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     model: 'zh-CN-shaanxi-XiaoniNeural',
-    input: '网关异常，请及时处理。',
+    input: 'Gateway error, please handle promptly.',
     voice: 'rate:0|pitch:0'
   })
 })
@@ -70,3 +67,4 @@ fetch('http://0.0.0.0:8901/v1/audio/speech', {
     audio.play();
   });
 ```
+
