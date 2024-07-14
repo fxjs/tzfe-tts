@@ -6,7 +6,6 @@ SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 BIN_PATH="/usr/local/bin/$SERVICE_NAME"
 LOG_DIR="/var/log/$SERVICE_NAME"
 
-# 启动服务
 echo "Removing $SERVICE_NAME service..."
 systemctl stop $SERVICE_NAME
 systemctl disable $SERVICE_NAME

@@ -2,6 +2,7 @@
 
 #### Text-to-Speech Service (Supports CORS, Authentication)
 
+
 ### Environment Setup
 Install [deno](https://docs.deno.com/runtime/manual/), [pnpm](https://pnpm.io/installation)
 
@@ -21,6 +22,7 @@ pnpm compile:linux
 ```
 [Reference Compilation Documentation](https://docs.deno.com/runtime/manual/tools/compiler/)
 
+
 ### Environment Variables
 ```text
 TTS_PORT The default startup port is 8901
@@ -28,11 +30,13 @@ TTS_PORT The default startup port is 8901
 TTS_AUTH_TOKEN Authentication token (if set to TestToken, the Authorization field must be added in the headers when calling the interface)
 ```
 
-### Deployment (Examples for Arch, Debian)
-##### Method 1. Register as a service
-```shell
-sudo sh ./install.sh
 
+### Deployment (Examples for Arch, Debian)
+##### Method 1. Install `tzfe-tts.service` Service and Manage with `systemctl`
+```shell
+curl -fsSL https://tts.tzmf.xyz/install.sh | sh
+```
+```shell
 # Check service status
 systemctl status tzfe-tts
 
@@ -41,11 +45,16 @@ tail -F /var/log/tzfe-tts/tzfe-tts.log
 ```
 
 ##### Method 2. Docker Image
-~_~
+- ==
 
 ### Uninstall
 ```shell
-sudo sh ./uninstall.sh
+curl -fsSL https://tts.tzmf.xyz/uninstall.sh | sh
+```
+
+### Configuring Log Rotation (Optional)
+```shell
+curl -fsSL https://tts.tzmf.xyz/logrotate.sh | sh
 ```
 
 ### Usage
@@ -67,4 +76,3 @@ fetch('http://0.0.0.0:8901/v1/audio/speech', {
     audio.play();
   });
 ```
-
