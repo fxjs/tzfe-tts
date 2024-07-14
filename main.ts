@@ -6,6 +6,7 @@
 
 import { serve } from 'https://deno.land/std/http/server.ts';
 import { EdgeSpeechTTS } from 'https://esm.sh/@lobehub/tts@1';
+import pkg from './package.json' with { type: 'json' };
 
 const TTS_PORT = Deno.env.get('TTS_PORT');
 const PORT = Number(TTS_PORT) || 8901;
@@ -65,16 +66,17 @@ function validateContentType(req: Request, expected: string) {
   }
 }
 
-async function handleDebugRequest(req: Request) {
+async function handleDebugRequest(req: Request, info: any) {
+  const clientIp = info.remoteAddr.hostname;
   const url = new URL(req.url);
   const voice = url.searchParams.get('voice') || '';
   const model = url.searchParams.get('model') || '';
   const text = url.searchParams.get('text') || '';
 
-  log(`Debug request with model=${model}, voice=${voice}, text=${text}`);
+  log(`Debug request with model=${model}, voice=${voice}, text=${text}`, clientIp);
 
   if (!voice || !model || !text) {
-    log('Missing required parameters');
+    log('Missing required parameters', clientIp);
     return new Response('Bad Request', { status: 400 });
   }
 
@@ -88,7 +90,8 @@ async function handleDebugRequest(req: Request) {
   });
 }
 
-async function handleSynthesisRequest(req: Request) {
+async function handleSynthesisRequest(req: Request, info: any) {
+  const clientIp = info.remoteAddr.hostname;
   if (req.method === 'OPTIONS') {
     // Respond to preflight request
     return new Response(null, {
@@ -101,12 +104,12 @@ async function handleSynthesisRequest(req: Request) {
   }
 
   if (req.method !== 'POST') {
-    log(`Invalid method ${req.method}, expected POST`);
+    log(`Invalid method ${req.method}, expected POST`, clientIp);
     return new Response('Method Not Allowed', { status: 405 });
   }
 
   if (unauthorized(req)) {
-    log(`Unauthorized request`);
+    log(`Unauthorized request`, clientIp);
     return new Response('Unauthorized', { status: 401 });
   }
 
@@ -114,7 +117,7 @@ async function handleSynthesisRequest(req: Request) {
   if (invalidContentType) return invalidContentType;
 
   const { model, input, voice } = await req.json();
-  log(`Synthesis request with model=${model}, input=${input}, voice=${voice}`);
+  log(`Synthesis request with model=${model}, input=${input}, voice=${voice}`, clientIp);
 
   // return synthesizeSpeech(model, voice, input);
   // Add CORS headers
@@ -135,18 +138,26 @@ async function handleDemoRequest(req: Request) {
   });
 }
 
-function log(str: string, type?: string) {
+function log(str: string, ip?: string, type?: string) {
   const clog = type === 'error' ? console.error : console.log;
-  clog(`[${new Date().toLocaleString()}]`, str);
+  const prefix = ip ? `${ip} -- ` : '';
+  clog(`${prefix}[${new Date().toLocaleString()}]`, str);
 }
 
 serve(
-  async (req: any) => {
+  async (req: any, info: any) => {
+    const clientIp = info.remoteAddr.hostname;
+
     try {
       const url = new URL(req.url);
 
       if (url.pathname === '/') {
+        log('Visited the demo page.', clientIp);
         return handleDemoRequest(req);
+      }
+
+      if (url.pathname === '/version') {
+        return new Response(pkg.version);
       }
 
       // if (url.pathname === '/tts') {
@@ -154,13 +165,13 @@ serve(
       // }
 
       if (url.pathname !== '/v1/audio/speech') {
-        log(`Unhandled path ${url.pathname}`);
+        log(`Unhandled path ${url.pathname}`, clientIp);
         return new Response('Not Found', { status: 404 });
       }
 
-      return handleSynthesisRequest(req);
+      return handleSynthesisRequest(req, info);
     } catch (err: any) {
-      log(`Error processing request: ${err.message}`, 'error');
+      log(`Error processing request: ${err.message}`, clientIp, 'error');
       return new Response(`Internal Server Error\n${err.message}`, {
         status: 500,
       });
