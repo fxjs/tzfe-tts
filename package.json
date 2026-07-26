@@ -12,6 +12,9 @@
   "keywords": [],
   "author": "fx",
   "license": "ISC",
+  "dependencies": {
+    "ws": "^8.21.1"
+  },
   "devDependencies": {
     "@tanzerfe/eslint-config-lint": "^0.0.5",
     "eslint": "8"

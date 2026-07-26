@@ -60,7 +60,7 @@ export async function synthesizeEdgeSpeech(
   rate = 0,
   pitch = 0
 ): Promise<Uint8Array> {
-  const connectId = crypto.randomUUID().replaceAll('-', '');
+  const connectId = crypto.randomUUID().replace(/-/g, '');
   const secMsGec = await generateSecMsGecToken();
   const url =
     `${EDGE_SPEECH_URL}?TrustedClientToken=${TRUSTED_CLIENT_TOKEN}` +
