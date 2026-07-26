@@ -34,7 +34,7 @@ TTS_AUTH_TOKEN Authentication token (if set to TestToken, the Authorization fiel
 ### Deployment (Examples for Arch, Debian)
 ##### Method 1. Install `tzfe-tts.service` Service and Manage with `systemctl`
 ```shell
-curl -fsSL https://tts.tzmf.xyz/install.sh | sh
+curl -fsSL https://github.com/fxjs/tzfe-tts/releases/latest/download/install.sh | sh
 ```
 ```shell
 # Check service status
@@ -49,12 +49,12 @@ tail -F /var/log/tzfe-tts/tzfe-tts.log
 
 ### Uninstall
 ```shell
-curl -fsSL https://tts.tzmf.xyz/uninstall.sh | sh
+curl -fsSL https://github.com/fxjs/tzfe-tts/releases/latest/download/uninstall.sh | sh
 ```
 
 ### Configuring Log Rotation (Optional)
 ```shell
-curl -fsSL https://tts.tzmf.xyz/logrotate.sh | sh
+curl -fsSL https://github.com/fxjs/tzfe-tts/releases/latest/download/logrotate.sh | sh
 ```
 
 ### Usage

@@ -34,7 +34,7 @@ TTS_AUTH_TOKEN 鉴权token （如设置为TestToken，调用接口时需在heade
 ### 部署（以 Arch、Debian 为例）
 ##### 方式1. 安装 tzfe-tts.service 服务，使用 systemctl 进行管理
 ```shell
-curl -fsSL https://tts.tzmf.xyz/install.sh | sh
+curl -fsSL https://github.com/fxjs/tzfe-tts/releases/latest/download/install.sh | sh
 ```
 ```shell
 # 查看服务状态
@@ -49,12 +49,12 @@ tail -F /var/log/tzfe-tts/tzfe-tts.log
 
 ### 卸载
 ```shell
-curl -fsSL https://tts.tzmf.xyz/uninstall.sh | sh
+curl -fsSL https://github.com/fxjs/tzfe-tts/releases/latest/download/uninstall.sh | sh
 ```
 
 ### 配置日志轮转（可选）
 ```shell
-curl -fsSL https://tts.tzmf.xyz/logrotate.sh | sh
+curl -fsSL https://github.com/fxjs/tzfe-tts/releases/latest/download/logrotate.sh | sh
 ```
 
 ### 调用

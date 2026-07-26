@@ -12,13 +12,8 @@ LOG_FILE="$LOG_DIR/$SERVICE_NAME.log"
 # 手动指定平台
 PLATFORM="x86_64-unknown-linux-gnu"  # 请根据需要修改这个值，例如 "aarch64-unknown-linux-gnu", "x86_64-apple-darwin" 等
 
-# 获取最新的 release 下载链接
-LATEST_RELEASE_URL=$(curl -s "https://api.github.com/repos/$GITHUB_REPO/releases/latest" | grep "browser_download_url" | grep "$PLATFORM.tar.gz" | cut -d '"' -f 4)
-
-if [ -z "$LATEST_RELEASE_URL" ]; then
-  echo "Error: Failed to fetch the latest release URL for platform $PLATFORM."
-  exit 1
-fi
+# 从 GitHub Release 下载对应平台包
+LATEST_RELEASE_URL="https://github.com/$GITHUB_REPO/releases/latest/download/$SERVICE_NAME-$PLATFORM.tar.gz"
 
 # 创建临时目录
 echo "Creating temporary directory..."
