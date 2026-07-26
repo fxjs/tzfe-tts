@@ -1,6 +1,6 @@
 {
   "name": "tzfe-tts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "scripts": {
     "start": "deno run --allow-env --allow-net main.ts",

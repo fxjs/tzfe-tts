@@ -5,7 +5,7 @@
  */
 
 import { serve } from 'https://deno.land/std/http/server.ts';
-import { EdgeSpeechTTS } from 'https://esm.sh/@lobehub/tts@1';
+import { synthesizeEdgeSpeech } from './edgeSpeech.ts';
 import pkg from './package.json' with { type: 'json' };
 
 const TTS_PORT = Deno.env.get('TTS_PORT');
@@ -29,23 +29,11 @@ async function fetchVoiceList() {
 }
 
 async function synthesizeSpeech(model: string, voice: string, text: string) {
-  const voiceName = model;
   const params = Object.fromEntries(voice.split('|').map((p) => p.split(':') as [string, string]));
   const rate = Number(params['rate'] || 0);
   const pitch = Number(params['pitch'] || 0);
 
-  const tts = new EdgeSpeechTTS({ locale: 'zh-CN' });
-
-  const payload = {
-    input: text,
-    options: {
-      rate: rate,
-      pitch: pitch,
-      voice: voiceName,
-    },
-  };
-  const response = await tts.create(payload);
-  const mp3Buffer = new Uint8Array(await response.arrayBuffer());
+  const mp3Buffer = await synthesizeEdgeSpeech(text, model, rate, pitch);
 
   log(`Successfully synthesized speech, returning audio/mpeg response`);
   return new Response(mp3Buffer, {
@@ -80,14 +68,11 @@ async function handleDebugRequest(req: Request, info: any) {
     return new Response('Bad Request', { status: 400 });
   }
 
-  // return synthesizeSpeech(model, voice, text);
-  // Add CORS headers
-  return synthesizeSpeech(model, voice, text).then((response) => {
-    response.headers.set('Access-Control-Allow-Origin', '*'); // Or specify a particular origin
-    response.headers.set('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-    return response;
-  });
+  const response = await synthesizeSpeech(model, voice, text);
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  return response;
 }
 
 async function handleSynthesisRequest(req: Request, info: any) {
@@ -119,14 +104,11 @@ async function handleSynthesisRequest(req: Request, info: any) {
   const { model, input, voice } = await req.json();
   log(`Synthesis request with model=${model}, input=${input}, voice=${voice}`, clientIp);
 
-  // return synthesizeSpeech(model, voice, input);
-  // Add CORS headers
-  return synthesizeSpeech(model, voice, input).then((response) => {
-    response.headers.set('Access-Control-Allow-Origin', '*'); // Or specify a particular origin
-    response.headers.set('Access-Control-Allow-Methods', 'POST,OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-    return response;
-  });
+  const response = await synthesizeSpeech(model, voice, input);
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'POST,OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  return response;
 }
 
 async function handleDemoRequest(req: Request) {
@@ -169,7 +151,7 @@ serve(
         return new Response('Not Found', { status: 404 });
       }
 
-      return handleSynthesisRequest(req, info);
+      return await handleSynthesisRequest(req, info);
     } catch (err: any) {
       log(`Error processing request: ${err.message}`, clientIp, 'error');
       return new Response(`Internal Server Error\n${err.message}`, {
