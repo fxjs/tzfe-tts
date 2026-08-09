@@ -37,9 +37,11 @@ async function generateSecMsGecToken() {
 function genSSML(text: string, voice: string, rate: number, pitch: number) {
   let inner = text;
   if (rate || pitch) {
-    const pitchPct = Math.floor((pitch || 1) * 100);
-    const ratePct = Math.floor((rate || 1) * 100);
-    inner = `<prosody pitch="${pitchPct}%" rate="${ratePct}%">${inner}</prosody>`;
+    // rate/pitch take [-1, 1], 0 means unchanged. SSML relative adjustments must
+    // carry an explicit sign: "20%" is read as 20% *of* the default (5x slower),
+    // while "+20%" is the intended 20% faster.
+    const relative = (n: number) => `${n >= 0 ? '+' : ''}${Math.round(n * 100)}%`;
+    inner = `<prosody pitch="${relative(pitch)}" rate="${relative(rate)}">${inner}</prosody>`;
   }
   return (
     `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" ` +
